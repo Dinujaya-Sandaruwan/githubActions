@@ -14,21 +14,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Get commit message and changed files
+        id: commit_changes
+        run: |
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+          echo "::set-output name=message::${COMMIT_MESSAGE}"
+          echo "::set-output name=files::${CHANGED_FILES}"
+
       - name: Create Pull Request with GitHub Script
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.MY_REPO_TOKEN }}
           script: |
+            // Avoid using 'github' variable to prevent conflict
             const { octokit } = require("@octokit/rest");
 
-            const github = new octokit({ auth: githubToken });
+            // Create new Octokit client with provided token
+            const myGithubClient = new octokit({ auth: githubToken });
 
+            // Extract data from previous steps
             const title = steps.commit_changes.outputs.message;
             const body = "List of changed files:\n${{ steps.commit_changes.outputs.files }}";
             const head = "build/beta";
             const base = "main";
 
-            await github.pulls.create({
+            // Use Octokit client to create a pull request
+            await myGithubClient.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title,
