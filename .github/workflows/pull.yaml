@@ -10,9 +10,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: develop
 
       - name: create pull request
         run: gh pr create build/beta -B  -H main --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
