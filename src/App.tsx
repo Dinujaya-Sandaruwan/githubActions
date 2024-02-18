@@ -5,7 +5,7 @@ function App() {
         <div className="sky">
           <div className="text">
             <img src="./logo.png" alt="" />
-            <span>#githubActions 03</span>
+            <span>#githubActions 04</span>
           </div>
           <div className="stars"></div>
           <div className="stars1"></div>
