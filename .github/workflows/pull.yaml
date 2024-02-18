@@ -31,3 +31,4 @@ jobs:
             List of changed files:
             ${{ steps.commit_changes.outputs.files }}
           branch: main
+          draft: true
