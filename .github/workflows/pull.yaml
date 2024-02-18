@@ -1,4 +1,4 @@
-name: Create Pull Request on Commit to build/beta
+name: Create Open Pull Request on Commit to build/beta
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           echo "::set-output name=message::${COMMIT_MESSAGE}"
           echo "::set-output name=files::${CHANGED_FILES}"
 
-      - name: Create Pull Request
+      - name: Create Pull Request (without merging)
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.MY_REPO_TOKEN }}
@@ -31,4 +31,6 @@ jobs:
             List of changed files:
             ${{ steps.commit_changes.outputs.files }}
           branch: main
-          draft: true
+          # Crucial change: Do not merge automatically
+          merge: false
+
