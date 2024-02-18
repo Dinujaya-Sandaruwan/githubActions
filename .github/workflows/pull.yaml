@@ -30,10 +30,11 @@ jobs:
         with:
           github-token: ${{ secrets.MY_REPO_TOKEN }}
           script: |
-            // Use full package name to avoid ambiguity
             const { octokit } = require('@octokit/rest');
 
-            // Create new Octokit client with provided token
+            // Access the token using context.payload.github-token
+            const githubToken = context.payload.github-token;
+
             const myGithubClient = new octokit({ auth: githubToken });
 
             // Extract data from previous steps
