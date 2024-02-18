@@ -28,7 +28,7 @@ jobs:
       - name: Create Pull Request with GitHub Script
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.MY_REPO_TOKEN }}
           script: |
             // Use full package name to avoid ambiguity
             const { octokit } = require('@octokit/rest');
