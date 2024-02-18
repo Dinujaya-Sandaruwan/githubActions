@@ -8,7 +8,13 @@ jobs:
   create-pull-request:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: develop
+
       - name: create pull request
-        run: gh pr create main -B  -H build/beta --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+        run: gh pr create build/beta -B  -H main --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
         env:
           GITHUB_TOKEN: ${{ secrets.MY_REPO_TOKEN }}
