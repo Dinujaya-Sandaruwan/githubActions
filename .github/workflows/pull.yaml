@@ -2,7 +2,7 @@ name: Pull Request Action
 on:
   push:
     branches:
-      - build/bets
+      - build/beta
 
 jobs:
   create-pull-request:
