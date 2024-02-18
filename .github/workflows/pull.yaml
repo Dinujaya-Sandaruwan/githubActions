@@ -14,6 +14,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install @octokit/rest
+        run: npm install @octokit/rest # Or yarn add @octokit/rest if using Yarn
+
       - name: Get commit message and changed files
         id: commit_changes
         run: |
@@ -25,10 +28,10 @@ jobs:
       - name: Create Pull Request with GitHub Script
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.MY_REPO_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // Avoid using 'github' variable to prevent conflict
-            const { octokit } = require("@octokit/rest");
+            // Use full package name to avoid ambiguity
+            const { octokit } = require('@octokit/rest');
 
             // Create new Octokit client with provided token
             const myGithubClient = new octokit({ auth: githubToken });
