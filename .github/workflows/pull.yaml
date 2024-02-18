@@ -14,23 +14,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get commit message and changed files
-        id: commit_changes
-        run: |
-          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-          echo "::set-output name=message::${COMMIT_MESSAGE}"
-          echo "::set-output name=files::${CHANGED_FILES}"
-
-      - name: Create Pull Request (without merging)
-        uses: peter-evans/create-pull-request@v3
+      - name: Create Pull Request with GitHub Script
+        uses: actions/github-script@v6
         with:
-          token: ${{ secrets.MY_REPO_TOKEN }}
-          commit-message: ${{ steps.commit_changes.outputs.message }}
-          body: |
-            List of changed files:
-            ${{ steps.commit_changes.outputs.files }}
-          branch: main
-          # Crucial change: Do not merge automatically
-          merge: false
+          github-token: ${{ secrets.MY_REPO_TOKEN }}
+          script: |
+            const { octokit } = require("@octokit/rest");
 
+            const github = new octokit({ auth: githubToken });
+
+            const title = steps.commit_changes.outputs.message;
+            const body = "List of changed files:\n${{ steps.commit_changes.outputs.files }}";
+            const head = "build/beta";
+            const base = "main";
+
+            await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              head,
+              base,
+            });
